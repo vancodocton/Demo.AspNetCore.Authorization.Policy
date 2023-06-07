@@ -8,6 +8,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication()
     .AddJwtBearer();
 
+builder.Services.AddAuthorization(options =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+        .RequireRole("Admin")
+        .Build();
+
+    options.DefaultPolicy = policy;
+
+    options.AddPolicy("CustomPolicy", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
